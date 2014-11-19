@@ -5,7 +5,7 @@ Written by by Justin B. Kinney, Cold Spring Harbor Laboratory
 Last updated on 19 November 2014 
 
 Reference: 
-    Kinney, J.B. (2014) Unification of Field Theory and Maximum Entropy Methods for Learning Probability Densities
+    Kinney, J.B. (2014) Unification of Field Theory and Maximum Entropy Methods for Learning Probability Densities arXiv[???]
     
 Code: https://github.com/jbkinney/14_maxent
 
@@ -19,9 +19,9 @@ The file "deft_nobc.py" and "deft_utils.py" contain all the density estmation ro
 
 To see a simple demsontration of deft_nobc_1d in 1 dimension, run "demo.py"
 
-To recreate Fig. 1, run "fig_1.py".
+To recreate Fig. 1, run *fig_1.py*.
 
-To recreate Fig. 2, run "fig_2_calculate.py", then "fig_2_draw.py"
+To recreate Fig. 2, run *fig_2_calculate.py*, then *fig_2_draw.py*
 
 === FILES ===
 
@@ -43,5 +43,5 @@ To recreate Fig. 2, run "fig_2_calculate.py", then "fig_2_draw.py"
 *fig_2_draw.py:*
 	Draws Fig. 2, saves as fig_2.pdf
 	
-==fig_2.pickle:==
+*fig_2.pickle:*
   Contains results of simulations performed for fig_2.pdf
