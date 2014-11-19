@@ -1,11 +1,5 @@
 import scipy as sp
-import matplotlib.pyplot as plt
-import time
-from deft import deft
-from deft_utils import get_cumulants, get_colormap
-from scipy.interpolate import interp1d
-from matplotlib import cm
-from matplotlib.patches import Rectangle
+from deft_nobc import deft_nobc_1d
 from numpy.random import choice
 import pickle
 
@@ -15,14 +9,10 @@ class Results: pass;
 #
 
 N = 100
-
 alpha = 3
 G = 100
-#epsilon = 1E-1
-#epsilon = sp.pi*1E-2
 epsilon = 1E-2
-
-num_trials = 100
+num_trials = 20 # 100 used in paper
 
 ds = [0, 2.5, 5]
 sigma = 1
@@ -52,7 +42,7 @@ for d_num, d in enumerate(ds):
         data = xs[data_indices]
         
         # Estimate density
-        Q_star, xgrid, res = deft(data, G, bbox, alpha=alpha, epsilon=epsilon, details=True)
+        Q_star, xgrid, res = deft_nobc_1d(data, G, bbox, alpha=alpha, epsilon=epsilon, details=True)
         trial_results.append(res) 
         print '.', 
     

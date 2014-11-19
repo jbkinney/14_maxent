@@ -1,11 +1,9 @@
 import scipy as sp
 import matplotlib.pyplot as plt
 import time
-from deft import deft
-from deft_utils import get_cumulants 
+from deft_nobc import deft_nobc_1d
 from scipy.interpolate import interp1d
 from matplotlib import cm
-from numpy.linalg import eigh, det
 
 
 plt.close('all')
@@ -100,7 +98,7 @@ Q_true = Q_true/sp.sum(h*Q_true)
 #
 
 start_time = time.clock()
-Q_star, xgrid, res = deft(data, G, bbox, alpha=alpha, epsilon=epsilon, details=True)
+Q_star, xgrid, res = deft_nobc_1d(data, G, bbox, alpha=alpha, epsilon=epsilon, details=True)
 stop_time = time.clock()
 print 'Execution time: %f sec'%(stop_time-start_time)
 
@@ -209,4 +207,4 @@ label_semilogx_subplot(ax,'$(d)$',label_ypad=0.1)
 
 plt.subplots_adjust(hspace=0.5, wspace=0, left=0.17, right=0.99, top=0.98, bottom=0.07)
 plt.show()
-#plt.savefig('fig_1.pdf')
+plt.savefig('fig_1.pdf')

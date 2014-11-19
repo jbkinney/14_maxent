@@ -1,16 +1,12 @@
 import scipy as sp
 import matplotlib.pyplot as plt
-import time
-from deft import deft
-from deft_utils import get_cumulants, get_colormap
-from scipy.interpolate import interp1d
 from matplotlib import cm
-from matplotlib.patches import Rectangle
-from numpy.random import choice
-from numpy.linalg import eigh, det
+from numpy.linalg import eigh
 import pickle
-
+from deft_nobc import compute_K_coeff
 class Results: pass;
+
+
 
 plt.close('all')
 
@@ -73,24 +69,12 @@ num_examples = len(all_examples)
 
 for n, example in enumerate(all_examples):
 
+
+    res = example.results[0]
     Q_true = example.Q_true
     d = example.d
     num_trials = len(example.results)
-
-    res = example.results[0]
     
-    # Compute the spectrum of Delta
-    Delta = res.Delta.todense()
-    alpha = int(-Delta[0,1])
-    lambdas, psis = eigh(Delta) # Columns of psi are eigenvectors
-    original_psis = sp.array(psis)
-                
-    R = res.R
-    M = res.M
-    G = len(R)
-    Qs = res.Qs[1:-1,:]
-    ells = res.ells
-    ell_star = res.ells[res.istar]
     xgrid = res.xgrid
     h = example.h
     bbox = example.bbox
@@ -103,7 +87,6 @@ for n, example in enumerate(all_examples):
     ax = plt.subplot(2,3,subplot_num+1)
     plt.bar(xgrid-h/2.0, res.R, width=h, edgecolor='none', color=gray)
     plt.plot(xgrid, Q_true, 'k', linewidth=2)
-    #plt.plot(xgrid, Q_star,color=lightblue, linewidth=2)
     plt.xlim(bbox)
     plt.ylim([0, 1.5*max(Q_true)])
     plt.yticks([])
@@ -122,128 +105,64 @@ for n, example in enumerate(all_examples):
     num_called_max_ent_and_right = 0
     
     #
-    # Compute B statistics
+    # Compute K coefficients
     #
-    B_stats = sp.zeros(len(example.results))
+    K_coeffs = sp.zeros(len(example.results))
     flags = sp.zeros(len(example.results))
-    sign_matches = sp.zeros(len(example.results))
     max_ent = sp.array([False]*len(example.results))
     for res_num, res in enumerate(example.results):
-        R = res.R
-        M = res.M
-        N = res.N
-        shifted_log_ptgd = res.log_ptgd - res.log_ptgd_at_infty
-    
-        # Get normalized M and R, with unit grid spacing
-        M = sp.array(M/sp.sum(M)).T
-        R = sp.array(R/sp.sum(R)).T
-    
-        # Diagonalize first alpha psis with respect to diag_M
-        # This does the trick
-        diag_M_mat = sp.mat(sp.diag(M))
-        psis_ker_mat = sp.mat(original_psis[:,:alpha])
-        diag_M_ker = psis_ker_mat.T*diag_M_mat*psis_ker_mat
-        omegas, psis_ker_coeffs = eigh(diag_M_ker)
-        
-        psis = original_psis.copy()
-        psis[:,:alpha] = psis_ker_mat*psis_ker_coeffs
-    
-        # Now compute relevant coefficients
-        # i: range(G)
-        # j,k: range(alpha)
-        V_is = sp.array([sp.sum((M - R)*psis[:,i]) for i in range(G)])
-        W_iis = sp.array([sp.sum(M*psis[:,i]*psis[:,i]) for i in range(G)])
-        W_ijs = sp.array([[sp.sum(M*psis[:,i]*psis[:,j]) for j in range(alpha)] for i in range(G)] )
-        W_ijks = sp.array([[[sp.sum(M*psis[:,i]*psis[:,j]*psis[:,k]) for j in range(alpha)] for k in range(alpha)] for i in range(G)] )
-    
-        B_pos_terms = sp.array([(N*V_is[i]**2)/(2*lambdas[i]) for i in range(alpha,G)])
-        B_neg_terms = sp.array([(-W_iis[i])/(2*lambdas[i]) for i in range(alpha,G)])
-        B_ker1_terms = sp.array([sum([W_ijs[i,k]**2 / (2*lambdas[i]*omegas[k])for k in range(alpha)]) for i in range(alpha,G)] )
-        B_ker2_terms = sp.array([sum([V_is[i]*W_ijks[i,k,k]**2 / (2*lambdas[i]*omegas[k]) for k in range(alpha)]) for i in range(alpha,G)] )
-        B_ker3_terms = sp.array([sum([sum([-V_is[i]*W_ijs[i,j]*W_ijks[j,k,k] / (2*lambdas[i]*omegas[k]*omegas[j])for j in range(alpha)]) for k in range(alpha)])for i in range(alpha,G)] )
-        
-        # I THINK THIS IS RIGHT!!!
-        B_stat = B_pos_terms.sum() + B_neg_terms.sum() + B_ker1_terms.sum() + B_ker2_terms.sum() + B_ker3_terms.sum()
 
-        # Compute B_empirical
-        B_empirical = shifted_log_ptgd[0]
-
-        if B_stat > 0:
-            ell_star = res.ells[res.istar]
-            this_yl = [yl[0]-sp.rand()*yrange, yl[1]+sp.rand()*yrange]
-            #plt.semilogx([ell_star, ell_star], this_yl, ':k', linewidth=0.5, alpha=0.2)
-            #color = orange
-        else:
-            color = lightblue
-            num_max_ent += 1
-                    
+        # Compute the maximum of log_ptgd
+        shifted_log_ptgd = res.log_ptgd - res.log_ptgd_at_infty                    
         indices = sp.isfinite(shifted_log_ptgd)
         max_ptgd =  max(shifted_log_ptgd[indices])
         
+        # Compute whether data was assigned the MaxEnt density estiamte
         max_ent[res_num] = (max_ptgd < 0.0)
+
+        # Compute the K coefficient
+        K_coeff = compute_K_coeff(res)         
+        K_coeffs[res_num] = K_coeff
         
-        if (B_stat > 0.0) and (max_ptgd > 0.0):  # True positives
+        # Flag how K_coeff performs relative to full computation
+        if (K_coeff > 0.0) and (max_ptgd > 0.0):  # True positives
             flag = 1 
-        elif (B_stat < 0.0) and (max_ptgd < 0.0):   # True negatives
+        elif (K_coeff < 0.0) and (max_ptgd < 0.0):   # True negatives
             flag = -1
         else:
             flag = 0
-        
-        if (B_stat < 0.0) and (max_ptgd > 0.0):
-            makes_sense = shifted_log_ptgd[0] < 0
-
-        
-        # Compute the quantity in the paper
-        if (B_stat < 0.0):
-            num_called_max_ent += 1.0
-            if (max_ptgd < 0.0):
-                num_called_max_ent_and_right += 1.0
-                    
-        if sp.sign(B_stat) == sp.sign(B_empirical):
-            sign_match = True
-        else:
-            sign_match = False
-            
-        
-        #plt.semilogx(res.ells, res.log_ptgd - res.log_ptgd_at_infty, color=color, linewidth=0.5, alpha=0.2)
-        B_stats[res_num] = B_stat
         flags[res_num] = flag
-        sign_matches[res_num] = sign_match
         
-    #print flags
+
+    # Summarize results
+    num_max_ent = sum(max_ent)
     num_trials = len(example.results)
     pct_max_ent = num_max_ent*100./num_trials
     pct_true_pos = sum(flags == 1)*100./num_trials + 1E-10
     pct_true_neg = sum(flags == -1)*100./num_trials + 1E-10
-    
     pct_pos = 100.-pct_max_ent
     pct_neg = pct_max_ent        
-                                              
+             
+    print '=== Results for d = %f ===='%d                                 
     print 'Positive (not MaxEnt) rate: %d%%'%pct_pos
     if pct_pos > 0:
         print 'TP rate: %d%%'%(100.*pct_true_pos/pct_pos)
     print 'Negative (MaxEnt) rate: %d%%'%pct_neg
     if pct_neg > 0:
-        print 'TN rate: %d%%'%int(100.*pct_true_neg/pct_neg)
-    
-    # This is the quantity that's in the paper: (# B < 0 & maxent) / # B < 0  
-    #print 'Fidelity of B < 0 call:%d'%(100.*num_called_max_ent_and_right / num_called_max_ent)                         
+        print 'TN rate: %d%%'%int(100.*pct_true_neg/pct_neg)                      
                                                                                                                       
     plt.ylim(yl)
     plt.yticks([-40, -20, 0, 20, 40])
     plt.xlim(xl)
-    #plt.xlim([1,10])
-    #plt.xlim([min_ell, max_ell])
+
     plt.xlabel('$\ell$',labelpad=-1,fontsize=fontsize)
     plt.ylabel('$\ln~E$',labelpad=0,fontsize=fontsize)
     plt.title('MaxEnt: %d\%%'%pct_max_ent, fontsize=fontsize)
-    #plt.title('MaxEnt: %d\%%,  TN: %d\%%,  TP: %d\%%'%(pct_max_ent, pct_true_neg, pct_true_pos), fontsize=fontsize)
     label_semilogx_subplot(ax,'$(%s)$'%subplot_labels[subplot_num], label_ypad=0.1)
 
     for res_num, res in enumerate(example.results):   
         ell_star = 2*xl[1] if max_ent[res_num] else res.ells[res.istar]
         this_yl = [yl[0]-sp.rand()*yrange, yl[1]+sp.rand()*yrange]  
-        #plt.semilogx([ell_star, ell_star], this_yl, '-k', linewidth=0.5, alpha=0.2)
     
     for res_num, res in enumerate(example.results): 
         color = lightblue if max_ent[res_num] else orange
