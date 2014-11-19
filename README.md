@@ -17,7 +17,7 @@ Dependencies: scipy
 
 The file *deft_nobc.py* and *deft_utils.py* contain all the density estmation routines used in this paper. Just copy this file to any directory in which you want to peform density estimation, and do execute "from deft\_nobc.py import deft\_nobc\_1d" in your Python script
 
-To see a simple demsontration of deft_nobc_1d() in 1 dimension, run *demo.py*
+To see a simple demsontration of the function "deft_nobc_1d" in 1 dimension, run *demo.py*
 
 To recreate Fig. 1, run *fig_1.py*.
 
