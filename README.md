@@ -43,5 +43,5 @@ To recreate Fig. 2, run "fig_2_calculate.py", then "fig_2_draw.py"
 *fig_2_draw.py:*
 	Draws Fig. 2, saves as fig_2.pdf
 	
-=fig_2.pickle:=
+==fig_2.pickle:==
   Contains results of simulations performed for fig_2.pdf
