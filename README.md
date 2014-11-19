@@ -25,23 +25,23 @@ To recreate Fig. 2, run "fig_2_calculate.py", then "fig_2_draw.py"
 
 === FILES ===
 
-demo.py:
+*demo.py:*
   Contains a quick example of DEFT without boundary conditions in 1D. 
 
-deft_nobc.py:
+*deft_nobc.py:*
 	Contains primary functions for field theory density estimation in 1D without boundary conditions. 
 	
-deft_utils.py
+*deft_utils.py*
   Contains helper functions for field theory density estimation in 1D without boundary conditions.
 
-fig_1.py:
+*fig_1.py:*
 	Performs computations for and plots Fig. 1. Saves as fig_1.pdf
 	
-fig_2_calculate.py:
+*fig_2_calculate.py:*
 	Performs computations for Fig. 2. Saves results in fig_2.pickle.
 	
-fig_2_draw.py:
+*fig_2_draw.py:*
 	Draws Fig. 2, saves as fig_2.pdf
 	
-fig_2.pickle:
+*fig_2.pickle:*
   Contains results of simulations performed for fig_2.pdf
