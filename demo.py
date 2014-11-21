@@ -1,7 +1,7 @@
 import scipy as sp
 import matplotlib.pyplot as plt
 import time
-from deft_nobc import deft_nobc_1d    # Import the density estimation function
+from deft_nobc import deft_nobc_1d, compute_K_coeff 
 
 ################################################################################
 # Set simulation parameters 
@@ -48,6 +48,10 @@ start_time = time.clock()
 Q_star, xgrid, res = deft_nobc_1d(data, G, bbox, alpha=alpha, details=True)
 stop_time = time.clock()
 print 'Execution time: %f sec'%(stop_time-start_time)
+
+# Compute K coefficient
+K = compute_K_coeff(res)
+print 'Value of K: %f'%K
 
 ################################################################################
 # Plot results

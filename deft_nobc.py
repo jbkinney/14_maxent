@@ -356,7 +356,7 @@ def interpolated_density_estimate(xgrid, Q):
 #
 # Performs density estimation
 #
-def deft_nobc_1d(xis_raw, G, bbox, alpha, epsilon=1E-2, details=False):
+def deft_nobc_1d(xis_raw, G, bbox, alpha, epsilon=3.14159E-2, details=False):
     
     # Comput MAP curve
     results = map_curve(xis_raw, G, bbox, alpha, epsilon=epsilon)
