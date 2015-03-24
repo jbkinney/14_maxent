@@ -5,7 +5,9 @@ Written by by Justin B. Kinney, Cold Spring Harbor Laboratory
 Last updated on 19 November 2014 
 
 Reference: 
-    Kinney, J.B. (2014) Unification of Field Theory and Maximum Entropy Methods for Learning Probability Densities arXiv[???]
+    Kinney JB (2014) 
+    Unification of Field Theory and Maximum Entropy Methods for Learning Probability Densities. 
+    arXiv:1411.5371 [physics.data-an] http://arxiv.org/abs/1411.5371
     
 Code: https://github.com/jbkinney/14_maxent
 
