@@ -19,9 +19,11 @@ The file *deft_nobc.py* and *deft_utils.py* contain all the density estmation ro
 
 To see a simple demsontration of the function "deft_nobc_1d" in 1 dimension, run *demo.py*
 
-To recreate Fig. 1, run *fig_1.py*.
+To recreate Fig. 2, run *fig_2.py*.
 
-To recreate Fig. 2, run *fig_2_calculate.py*, then *fig_2_draw.py*
+To recreate Fig. 3, run *fig_3_calculate.py*, then *fig_3_draw.py*.
+
+To recreate Fig. 4, run *fig_4.py*.
 
 === FILES ===
 
