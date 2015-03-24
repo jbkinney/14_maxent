@@ -8,13 +8,13 @@ from deft_nobc import deft_nobc_1d, compute_K_coeff
 ################################################################################
 
 # Set the number of data points
-N = 100
+N = 30
 
 # Set the number of grid points      
 G = 100       
 
 # Set the order of the constrained derivative
-alpha = 3     
+alpha = 3    
 
 ################################################################################
 # Generate data
@@ -57,7 +57,7 @@ print 'Value of K: %f'%K
 # Plot results
 ################################################################################
 plt.close('all')
-plt.rc('text', usetex=True)
+#plt.rc('text', usetex=True)
 plt.rc('font', family='serif', size=16)
 plt.figure()
 
@@ -66,7 +66,7 @@ gray = [0.6, 0.6, 0.6]
 plt.bar(xgrid-h/2.0, res.R, width=h, edgecolor='none', color='gray')
 
 # Plot the Q_true
-plt.plot(xgrid, Q_true, linewidth=3, color='k')
+#plt.plot(xgrid, Q_true, linewidth=3, color='k')
 
 # Plot the DEFT-estimated density
 orange = [1.,0.5,0.]
