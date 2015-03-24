@@ -34,14 +34,18 @@ To recreate Fig. 2, run *fig_2_calculate.py*, then *fig_2_draw.py*
 *deft_utils.py*
   Contains helper functions for field theory density estimation in 1D without boundary conditions.
 
-*fig_1.py:*
-	Performs computations for and plots Fig. 1. Saves as fig_1.pdf
+*fig_2.py:*
+	Performs computations for and plots Fig. 2. Saves as fig_2.pdf
 	
-*fig_2_calculate.py:*
-	Performs computations for Fig. 2. Saves results in fig_2.pickle.
+*fig_3_calculate.py:*
+	Performs computations for Fig. 3. Saves results in fig_3_20.pickle (for 20 simulations, not 100).
 	
-*fig_2_draw.py:*
-	Draws Fig. 2, saves as fig_2.pdf
+*fig_3_draw.py:*
+	Draws Fig. 3, saves as fig_3.pdf
 	
-*fig_2.pickle:*
-  Contains results of simulations performed for fig_2.pdf
+*fig_3.pickle:*
+	Contains results of simulations performed for fig_3.pdf
+  
+*fig_4.py:*
+	Draws Fig. 4, saves as fig_4.pdf
+
