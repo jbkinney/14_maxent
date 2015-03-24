@@ -2,7 +2,7 @@
 =========
 Written by by Justin B. Kinney, Cold Spring Harbor Laboratory
 
-Last updated on 19 November 2014 
+Last updated on 23 March 2015 
 
 Reference: 
     Kinney JB (2014) 
